@@ -9,7 +9,7 @@ use std::{collections::HashMap, error::Error};
 /// Contains methods to register routes and handle an `HttpRequest` object,
 /// executing the mapped method with the `HttpRequest` as an argument.
 pub struct HttpHandler {
-    pub routes: HashMap<String, fn(HttpRequest)>
+    pub routes: HashMap<String, fn(HttpRequest) -> HttpResponse>
 }
 
 impl HttpHandler {
@@ -20,12 +20,12 @@ impl HttpHandler {
         }
     }
 
-    pub fn register_route(&mut self, route: String, func: fn(HttpRequest)) -> Result<(), Box<dyn Error>> {
+    pub fn register_route(&mut self, route: String, func: fn(HttpRequest) -> HttpResponse) -> Result<(), Box<dyn Error>> {
         self.routes.insert(route, func);
         return Ok(())
     }
 
-    pub fn handle_request(&self, request: HttpRequest) {
+    pub fn handle_request(&self, request: HttpRequest) -> HttpResponse {
         let full_route = request.route.to_string();
         let mut route = "/";
         let parts: Vec<&str> = full_route.split("/").collect();
@@ -34,8 +34,12 @@ impl HttpHandler {
             route = parts[1];
         }
         match self.routes.get(route) {
-            Some(func) => func(request),
-            None => println!("Func not found for route {route}")
+            Some(func) => {
+                func(request)
+            },
+            None => {
+                HttpResponse::new(404)
+            }
         }
     }
 }

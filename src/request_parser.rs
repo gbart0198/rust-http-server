@@ -36,7 +36,7 @@ impl HttpRequest {
 pub struct HttpRequestParser;
 
 impl HttpRequestParser {
-    pub fn handle_http_request(mut stream: TcpStream) -> HttpRequest {
+    pub fn handle_http_request(mut stream: &TcpStream) -> HttpRequest {
         let mut buf = [0; 4096];
         let num_read = &stream.read(&mut buf).unwrap();
         let request_info: Vec<&str> = str::from_utf8(&buf[..*num_read])
