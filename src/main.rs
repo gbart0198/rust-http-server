@@ -1,11 +1,10 @@
 use http_server::{
-    socket_manager,
+    socket_manager::SocketHandler,
     request_parser,
     response_generator,
     request_handler
 };
 
-
 fn main() {
-    println!("Hello, world!");
+    SocketHandler::initialize();
 }
