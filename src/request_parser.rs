@@ -82,8 +82,6 @@ impl HttpRequestParser {
         }
 
         let req = HttpRequest::new(request_type, route, request_version, headers, content);
-        println!("{:?}", req);
-
         req
     }
 }

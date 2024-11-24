@@ -2,20 +2,20 @@ use std::io::Write;
 
 use http_server::{
     request_handler::HttpHandler, request_parser::HttpRequestParser, response_generator::HttpResponseGenerator,
-    route_handlers, socket_manager::SocketHandler,
+    route_handlers::Routes, socket_manager::SocketHandler,
 };
 
 fn main() {
     let listener = SocketHandler::initialize("localhost:8001");
     let mut handler = HttpHandler::new();
     handler
-        .register_route(String::from(""), route_handlers::handle_index)
+        .register_route(String::from(""), Routes::handle_index)
         .unwrap();
     handler
-        .register_route(String::from("test"), route_handlers::handle_get_item)
+        .register_route(String::from("item"), Routes::handle_get_item)
         .unwrap();
     handler
-        .register_route(String::from("segment"), route_handlers::handle_segment)
+        .register_route(String::from("segment"), Routes::handle_segment)
         .unwrap();
 
     for mut stream in listener.incoming() {
